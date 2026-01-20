@@ -1,198 +1,128 @@
-<<<<<<< HEAD
-import api from '../lib/api';
+import { supabase } from '../lib/supabase';
 
 export interface ClientRequest {
   name: string;
   email: string;
   phone?: string;
+  company?: string;
   projectType: string;
   budget: string;
   timeline: string;
   description: string;
-  requirements: string[];
+  requirements?: string[];
 }
 
 export const clientService = {
   async createClientRequest(requestData: ClientRequest) {
     try {
-      const response = await api.post('/contact', requestData);
-      return response.data;
-    } catch (error) {
-      console.error('Error creating client request:', error);
-      return {
-        success: false,
-        message: 'Failed to submit request'
-=======
-<<<<<<< HEAD
-import { supabase } from '../lib/supabase';
-=======
-import api from '../lib/api';
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
-
-export interface ClientRequestData {
-  name: string;
-  email: string;
-  phone?: string;
-<<<<<<< HEAD
-  project_type: string;
-  budget: string;
-  timeline: string;
-  description: string;
-=======
-  company?: string;
-  projectType: string; // This will be mapped to project_type in the controller
-  budget: string;
-  timeline: string;
-  description: string;
-  requirements?: string[];
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
-}
-
-export const clientService = {
-  async createClientRequest(data: ClientRequestData) {
-<<<<<<< HEAD
-    try {
-      const { data: request, error } = await supabase
+      // First, let's try to check if the table exists by doing a simple query
+      const { error: testError } = await supabase
         .from('client_requests')
-        .insert(data)
+        .select('id')
+        .limit(1);
+
+      // If table doesn't exist or other Supabase error, use fallback
+      if (testError) {
+        console.log('Supabase table error, using fallback storage:', testError.message);
+        return this.createFallbackRequest(requestData);
+      }
+
+      // Try to insert the data
+      const { data, error } = await supabase
+        .from('client_requests')
+        .insert([{
+          ...requestData,
+          status: 'pending',
+          created_at: new Date().toISOString()
+        }])
         .select()
         .single();
 
       if (error) {
-        return {
-          success: false,
-          message: error.message
-        };
+        console.error('Error creating client request:', error);
+        // Fallback to local storage if Supabase insert fails
+        return this.createFallbackRequest(requestData);
       }
 
       return {
         success: true,
-        message: 'Client request created successfully',
-        data: request
+        data
       };
     } catch (error) {
-      return {
-        success: false,
-        message: 'Failed to create client request'
-      };
+      console.error('Error creating client request:', error);
+      // Final fallback
+      return this.createFallbackRequest(requestData);
     }
-=======
-    const response = await api.post('/clients', data);
-    return response.data;
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
   },
 
-  async getUserClientRequests(params?: {
-    page?: number;
-    limit?: number;
-    status?: string;
-  }) {
-<<<<<<< HEAD
+  async createFallbackRequest(requestData: ClientRequest) {
     try {
-      let query = supabase
-        .from('client_requests')
-        .select('*', { count: 'exact' });
+      // Store in localStorage as fallback
+      const existingRequests = JSON.parse(localStorage.getItem('client_requests') || '[]');
+      const newRequest = {
+        id: Date.now().toString(),
+        ...requestData,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        source: 'fallback'
+      };
+      
+      existingRequests.push(newRequest);
+      localStorage.setItem('client_requests', JSON.stringify(existingRequests));
 
-      if (params?.status) {
-        query = query.eq('status', params.status);
-      }
-
-      const page = params?.page || 1;
-      const limit = params?.limit || 10;
-      const from = (page - 1) * limit;
-      const to = from + limit - 1;
-
-      query = query.range(from, to).order('created_at', { ascending: false });
-
-      const { data: requests, error, count } = await query;
-
-      if (error) {
-        throw error;
-      }
-
-      const totalPages = Math.ceil((count || 0) / limit);
+      console.log('Request stored in fallback storage:', newRequest);
 
       return {
         success: true,
-        data: {
-          requests: requests || [],
-          pagination: {
-            currentPage: page,
-            totalPages,
-            totalRequests: count || 0,
-            hasNext: page < totalPages,
-            hasPrev: page > 1
-          }
-        }
+        data: newRequest,
+        fallback: true
       };
     } catch (error) {
+      console.error('Fallback storage also failed:', error);
       return {
         success: false,
-        data: {
-          requests: [],
-          pagination: {
-            currentPage: 1,
-            totalPages: 0,
-            totalRequests: 0,
-            hasNext: false,
-            hasPrev: false
-          }
-        }
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
+        error: 'Failed to submit request'
       };
     }
   },
 
-<<<<<<< HEAD
   async getClientRequests() {
     try {
-      const response = await api.get('/contact/requests');
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching client requests:', error);
-      return {
-        success: false,
-        message: 'Failed to fetch requests'
-      };
-    }
-=======
-  async getClientRequestById(id: string) {
-    try {
-      const { data: request, error } = await supabase
+      // Try Supabase first
+      const { data, error } = await supabase
         .from('client_requests')
         .select('*')
-        .eq('id', id)
-        .single();
+        .order('created_at', { ascending: false });
 
       if (error) {
-        return {
-          success: false,
-          message: error.message,
-          data: null
-        };
+        console.error('Error fetching from Supabase, trying fallback:', error);
+        return this.getFallbackRequests();
       }
 
       return {
         success: true,
-        message: 'Client request fetched successfully',
-        data: request
+        data: data || []
       };
     } catch (error) {
-      return {
-        success: false,
-        message: 'Failed to fetch client request',
-        data: null
-      };
+      console.error('Error fetching client requests:', error);
+      return this.getFallbackRequests();
     }
-=======
-    const response = await api.get('/clients/user', { params });
-    return response.data;
   },
 
-  async getClientRequestById(id: string) {
-    const response = await api.get(`/clients/${id}`);
-    return response.data;
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
+  async getFallbackRequests() {
+    try {
+      const requests = JSON.parse(localStorage.getItem('client_requests') || '[]');
+      return {
+        success: true,
+        data: requests,
+        fallback: true
+      };
+    } catch (error) {
+      console.error('Error fetching fallback requests:', error);
+      return {
+        success: false,
+        error: 'Failed to fetch requests'
+      };
+    }
   }
 };

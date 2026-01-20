@@ -6,15 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Github, Linkedin, Mail, ExternalLink, Edit, Trash2, UserPlus, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
-<<<<<<< HEAD
-import { simpleService } from '../services/simple-service';
-=======
-<<<<<<< HEAD
-import { supabase } from '@/lib/supabase';
-=======
-import { adminService } from '@/services/admin.service';
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
+import { adminService } from '../services/admin.service';
 
 const Team = () => {
   const { user } = useAuth();
@@ -40,9 +32,8 @@ const Team = () => {
 
   const fetchDevelopers = async () => {
     try {
-<<<<<<< HEAD
       setLoading(true);
-      const response = await simpleService.getAllDevelopers();
+      const response = await adminService.getAllDevelopers();
       
       if (response.success) {
         setDevelopers(response.data.developers || []);
@@ -50,29 +41,6 @@ const Team = () => {
     } catch (error) {
       console.error('Error fetching developers:', error);
       toast.error('Failed to load developers');
-=======
-<<<<<<< HEAD
-      const { data: developers, error } = await supabase
-        .from('developers')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching developers:', error);
-        toast.error('Failed to fetch developers');
-      } else {
-        setDevelopers(developers || []);
-=======
-      const response = await adminService.getAllDevelopers();
-      if (response.success) {
-        setDevelopers(response.data.developers || []);
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
-      }
-    } catch (error) {
-      console.error('Error fetching developers:', error);
-      toast.error('Failed to fetch developers');
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
     } finally {
       setLoading(false);
     }
@@ -85,43 +53,14 @@ const Team = () => {
       const developerData = {
         ...formData,
         skills: formData.skills.split(',').map(s => s.trim()).filter(s => s),
-<<<<<<< HEAD
-        isActive: true
-=======
-<<<<<<< HEAD
         is_active: true
-=======
-        isActive: true
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
       };
 
       let response;
       if (editingDeveloper) {
-<<<<<<< HEAD
-        response = await simpleService.updateDeveloper(editingDeveloper._id, developerData);
-      } else {
-        response = await simpleService.addDeveloper(developerData);
-=======
-<<<<<<< HEAD
-        const { error } = await supabase
-          .from('developers')
-          .update(developerData)
-          .eq('id', editingDeveloper.id);
-        
-        response = { success: !error, message: error?.message };
-      } else {
-        const { error } = await supabase
-          .from('developers')
-          .insert(developerData);
-        
-        response = { success: !error, message: error?.message };
-=======
-        response = await adminService.updateDeveloper(editingDeveloper._id, developerData);
+        response = await adminService.updateDeveloper(editingDeveloper.id, developerData);
       } else {
         response = await adminService.addDeveloper(developerData);
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
       }
       
       if (response.success) {
@@ -145,15 +84,7 @@ const Team = () => {
       }
     } catch (error: any) {
       console.error('Error saving developer:', error);
-<<<<<<< HEAD
       toast.error(error.response?.data?.message || 'Failed to save developer');
-=======
-<<<<<<< HEAD
-      toast.error(error.message || 'Failed to save developer');
-=======
-      toast.error(error.response?.data?.message || 'Failed to save developer');
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
     }
   };
 
@@ -177,36 +108,12 @@ const Team = () => {
     if (!confirm('Are you sure you want to delete this developer?')) return;
     
     try {
-<<<<<<< HEAD
-      await simpleService.deleteDeveloper(developerId);
-=======
-<<<<<<< HEAD
-      const { error } = await supabase
-        .from('developers')
-        .delete()
-        .eq('id', developerId);
-      
-      if (error) {
-        toast.error('Failed to delete developer');
-      } else {
-        toast.success('Developer deleted successfully!');
-        fetchDevelopers();
-      }
-    } catch (error: any) {
-      console.error('Error deleting developer:', error);
-      toast.error('Failed to delete developer');
-=======
-      // Note: You'll need to implement deleteDeveloper in admin.service
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
+      await adminService.deleteDeveloper(developerId);
       toast.success('Developer deleted successfully!');
       fetchDevelopers();
     } catch (error: any) {
       console.error('Error deleting developer:', error);
       toast.error(error.response?.data?.message || 'Failed to delete developer');
-<<<<<<< HEAD
-=======
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
     }
   };
 
@@ -222,7 +129,6 @@ const Team = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <section className="py-20 bg-gradient-to-br from-primary/10 to-secondary/10">
-<<<<<<< HEAD
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -241,34 +147,12 @@ const Team = () => {
                 <UserPlus className="h-4 w-4 mr-2" />
                 Add Developer
               </Button>
-=======
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Development Team
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              The talented individuals behind Blitzs, dedicated to building exceptional software solutions
-            </p>
-            {user?.role === 'admin' && (
-              <div className="mt-6">
-                <Button onClick={() => setShowAddForm(true)} className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Developer
-                </Button>
-              </div>
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
             )}
           </motion.div>
         </div>
       </section>
 
       {/* Add Developer Form */}
-<<<<<<< HEAD
       {showAddForm && (
         <section className="py-20">
           <div className="container mx-auto px-4">
@@ -383,13 +267,13 @@ const Team = () => {
                       </div>
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="flex gap-3 pt-4">
                       <Button type="submit">
-                        {editingDeveloper ? 'Update' : 'Add'} Developer
+                        {editingDeveloper ? 'Update Developer' : 'Add Developer'}
                       </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
+                      <Button 
+                        type="button" 
+                        variant="outline" 
                         onClick={() => {
                           setShowAddForm(false);
                           setEditingDeveloper(null);
@@ -413,151 +297,6 @@ const Team = () => {
                 </CardContent>
               </Card>
             </motion.div>
-=======
-      {showAddForm && user?.role === 'admin' && (
-        <section className="py-8">
-          <div className="container mx-auto px-4">
-            <Card className="max-w-2xl mx-auto">
-              <CardContent>
-                <form onSubmit={handleAddDeveloper} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter developer name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter email address"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
-                    <textarea
-                      required
-                      value={formData.bio}
-                      onChange={(e) => setFormData({...formData, bio: e.target.value})}
-                      rows={4}
-                      className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Describe the developer's background and expertise"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Avatar URL</label>
-                      <input
-                        type="url"
-                        value={formData.avatar}
-                        onChange={(e) => setFormData({...formData, avatar: e.target.value})}
-                        className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="https://example.com/avatar.jpg"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Skills (comma-separated)</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.skills}
-                        onChange={(e) => setFormData({...formData, skills: e.target.value})}
-                        className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="React, Node.js, TypeScript, etc."
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Experience</label>
-                      <select
-                        value={formData.experience}
-                        onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                        className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                        <option value="expert">Expert</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">GitHub</label>
-                      <input
-                        type="url"
-                        value={formData.github}
-                        onChange={(e) => setFormData({...formData, github: e.target.value})}
-                        className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="https://github.com/username"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn</label>
-                      <input
-                        type="url"
-                        value={formData.linkedin}
-                        onChange={(e) => setFormData({...formData, linkedin: e.target.value})}
-                        className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="https://linkedin.com/in/username"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Portfolio</label>
-                    <input
-                      type="url"
-                      value={formData.portfolio}
-                      onChange={(e) => setFormData({...formData, portfolio: e.target.value})}
-                      className="w-full px-3 py-2 border border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="https://portfolio.example.com"
-                    />
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <Button type="submit">
-                      {editingDeveloper ? 'Update Developer' : 'Add Developer'}
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => {
-                        setShowAddForm(false);
-                        setEditingDeveloper(null);
-                        setFormData({
-                          name: '',
-                          email: '',
-                          bio: '',
-                          avatar: '',
-                          skills: '',
-                          experience: 'intermediate',
-                          github: '',
-                          linkedin: '',
-                          portfolio: ''
-                        });
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
           </div>
         </section>
       )}
@@ -565,145 +304,107 @@ const Team = () => {
       {/* Team Grid */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {developers.map((developer, index) => (
-              <motion.div
-<<<<<<< HEAD
-                key={developer.id || developer._id}
-=======
-<<<<<<< HEAD
-                key={developer.id}
-=======
-                key={developer.id || developer._id}
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="h-full hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex flex-col items-center text-center">
-                      {/* Avatar */}
-                      <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
-                        <img
-                          src={developer.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'}
-                          alt={developer.name}
-                          className="w-full h-full object-cover"
-<<<<<<< HEAD
-                          loading="lazy"
-=======
-<<<<<<< HEAD
-                          loading="lazy"
-=======
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
-                        />
+          {developers.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto">
+                <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                  <UserPlus className="h-12 w-12 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">No team members yet</h3>
+                <p className="text-muted-foreground">
+                  Our team is growing! Check back soon to meet our talented developers.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {developers.map((developer, index) => (
+                <motion.div
+                  key={developer.id || developer.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <Card className="h-full hover:shadow-lg transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex items-center space-x-4 mb-4">
+                        <div className="w-16 h-16 rounded-full overflow-hidden bg-muted">
+                          <img
+                            src={developer.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'}
+                            alt={developer.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold">{developer.name}</h3>
+                          <p className="text-sm text-muted-foreground">{developer.experience || 'Developer'}</p>
+                        </div>
                       </div>
 
-                      {/* Name & Role */}
-                      <h3 className="text-xl font-semibold mb-2">{developer.name}</h3>
-                      <Badge variant="secondary" className="mb-4">
-                        {developer.experience || 'Developer'}
-                      </Badge>
+                      <p className="text-muted-foreground mb-4">{developer.bio}</p>
 
-                      {/* Bio */}
-                      <p className="text-muted-foreground text-sm mb-6 line-clamp-3">
-                        {developer.bio}
-                      </p>
-
-                      {/* Skills */}
-                      <div className="flex flex-wrap gap-1 justify-center mb-6">
-                        {(developer.skills || []).slice(0, 6).map((skill) => (
-                          <Badge key={skill} variant="outline" className="text-xs">
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {(developer.skills || []).slice(0, 3).map((skill: string) => (
+                          <Badge key={skill} variant="secondary" className="text-xs">
                             {skill}
                           </Badge>
                         ))}
-                        {(developer.skills || []).length > 6 && (
+                        {(developer.skills || []).length > 3 && (
                           <Badge variant="outline" className="text-xs">
-                            +{(developer.skills || []).length - 6}
+                            +{(developer.skills || []).length - 3}
                           </Badge>
                         )}
                       </div>
 
-                      {/* Social Links */}
-                      <div className="flex gap-2 justify-center">
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={developer.github} target="_blank" rel="noopener noreferrer">
-                            <Github className="h-4 w-4" />
-                          </a>
-                        </Button>
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={developer.linkedin} target="_blank" rel="noopener noreferrer">
-                            <Linkedin className="h-4 w-4" />
-                          </a>
-                        </Button>
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={`mailto:${developer.email}`}>
-                            <Mail className="h-4 w-4" />
-                          </a>
-                        </Button>
-<<<<<<< HEAD
-                      </div>
+                      <div className="flex gap-2">
+                        {developer.github && (
+                          <Button size="sm" variant="outline" asChild>
+                            <a href={developer.github} target="_blank" rel="noopener noreferrer">
+                              <Github className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        )}
+                        {developer.linkedin && (
+                          <Button size="sm" variant="outline" asChild>
+                            <a href={developer.linkedin} target="_blank" rel="noopener noreferrer">
+                              <Linkedin className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        )}
+                        {developer.email && (
+                          <Button size="sm" variant="outline" asChild>
+                            <a href={`mailto:${developer.email}`}>
+                              <Mail className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        )}
+                        {developer.portfolio && (
+                          <Button size="sm" variant="outline" asChild>
+                            <a href={developer.portfolio} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        )}
 
-                      {/* Admin Actions */}
-                      {user && user.role === 'admin' && (
-                        <div className="flex gap-2 justify-center mt-4">
-                          <Button size="sm" variant="outline" onClick={() => handleEditDeveloper(developer)}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleDeleteDeveloper(developer._id || developer.id)}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-=======
-                        {user?.role === 'admin' && (
+                        {/* Admin Actions */}
+                        {user && user.role === 'admin' && (
                           <div className="flex gap-2">
                             <Button size="sm" variant="outline" onClick={() => handleEditDeveloper(developer)}>
                               <Edit className="h-4 w-4" />
                             </Button>
-<<<<<<< HEAD
                             <Button size="sm" variant="outline" onClick={() => handleDeleteDeveloper(developer.id)}>
-=======
-                            <Button size="sm" variant="outline" onClick={() => handleDeleteDeveloper(developer._id || developer.id)}>
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
                         )}
                       </div>
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            {[
-              { number: '50+', label: 'Projects Delivered' },
-              { number: '30+', label: 'Happy Clients' },
-              { number: '6+', label: 'Team Members' },
-              { number: '5+', label: 'Years Experience' }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <div className="text-4xl font-bold text-primary mb-2">{stat.number}</div>
-                <div className="text-muted-foreground">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

@@ -1,34 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Code2, Smartphone, Users, Zap, Sparkles, CheckCircle, Palette, Rocket, Wrench, Cloud } from 'lucide-react';
+import { ArrowRight, Code2, Users, Zap, Sparkles, Github, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SectionHeader } from '@/components/ui/section-header';
-<<<<<<< HEAD
 import { DeveloperCard } from '@/components/ui/developer-card';
-import { supabaseRealService } from '../services/supabase-real';
-
-// Simple ProjectCard component
-const ProjectCard = ({ title, description, category, price, isFree }: any) => (
-  <div className="border rounded-lg p-4">
-    <h3 className="text-lg font-semibold">{title}</h3>
-    <p className="text-gray-600">{description}</p>
-    <div className="flex justify-between items-center mt-2">
-      <span className="text-sm text-gray-500">{category}</span>
-      <span className="font-bold">{isFree ? 'Free' : `$${price}`}</span>
-    </div>
-  </div>
-);
-=======
-import { ProjectCard } from '@/components/ui/project-card';
-import { DeveloperCard } from '@/components/ui/developer-card';
-import { projectService } from '@/services/project.service';
-<<<<<<< HEAD
-import { supabase } from '@/lib/supabase';
-=======
-import { adminService } from '@/services/admin.service';
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
+import { projectService } from '../services/project.service';
+import { adminService } from '../services/admin.service';
 
 const Index = () => {
   const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -36,34 +14,11 @@ const Index = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [teamLoading, setTeamLoading] = useState(true);
 
-  const services = [
-    { icon: Code2, title: 'Ready-made Projects', description: 'Production-ready applications you can deploy instantly' },
-    { icon: Rocket, title: 'Web Application Development', description: 'Scalable, secure, modern web apps for businesses' },
-    { icon: Smartphone, title: 'Mobile App Development', description: 'Cross-platform iOS & Android applications' },
-    { icon: Users, title: 'Custom Development', description: 'Tailored software built to your exact requirements' },
-    { icon: Palette, title: 'UI / UX Design', description: 'Clean, intuitive, user-focused designs' },
-    { icon: Cloud, title: 'SaaS Development', description: 'End-to-end SaaS products from idea to launch' },
-    { icon: Wrench, title: 'Maintenance & Support', description: 'Long-term support, updates & optimization' },
-  ];
-
-<<<<<<< HEAD
-  // Fetch featured projects and team members from your real Supabase database
-  useEffect(() => {
-    // First, diagnose your database structure
-    supabaseRealService.diagnoseDatabase();
-
-    const fetchFeaturedProjects = async () => {
-      try {
-        setProjectsLoading(true);
-        const response = await supabaseRealService.getAllProjects({ 
-=======
-  // Fetch featured projects and team members
   useEffect(() => {
     const fetchFeaturedProjects = async () => {
       try {
         setProjectsLoading(true);
         const response = await projectService.getAllProjects({ 
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
           limit: 6, 
           sortBy: 'created_at' 
         });
@@ -81,31 +36,10 @@ const Index = () => {
     const fetchTeamMembers = async () => {
       try {
         setTeamLoading(true);
-<<<<<<< HEAD
-        const response = await supabaseRealService.getAllDevelopers();
-        
-        if (response.success) {
-          setTeamMembers(response.data.developers || []);
-=======
-<<<<<<< HEAD
-        const { data: developers, error } = await supabase
-          .from('developers')
-          .select('*')
-          .eq('is_active', true)
-          .order('created_at', { ascending: false })
-          .limit(6);
-        
-        if (error) {
-          console.error('Error fetching team members:', error);
-        } else {
-          setTeamMembers(developers || []);
-=======
         const response = await adminService.getAllDevelopers();
         
         if (response.success) {
           setTeamMembers(response.data.developers || []);
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
         }
       } catch (error) {
         console.error('Error fetching team members:', error);
@@ -117,14 +51,10 @@ const Index = () => {
     fetchFeaturedProjects();
     fetchTeamMembers();
   }, []);
+
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse-slow" />
-        
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -132,23 +62,13 @@ const Index = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-primary/10 border border-primary/20"
-            >
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Expert Developers, Exceptional Solutions</span>
-            </motion.div>
-
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
               Build Your Next Project with{' '}
               <span className="text-blitz-gradient">Blitzs</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              A team of expert developers delivering production-ready software and custom solutions. From web apps to mobile platforms, we build it all.
+              A team of expert developers delivering production-ready software and custom solutions.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -162,55 +82,10 @@ const Index = () => {
                 <Link to="/contact">Hire Us</Link>
               </Button>
             </div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="grid grid-cols-3 gap-8 mt-16 max-w-lg mx-auto"
-            >
-              {[
-                { value: '50+', label: 'Projects' },
-                { value: '100+', label: 'Happy Clients' },
-                { value: '5+', label: 'Years Experience' },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-primary">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
-            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <SectionHeader badge="What We Offer" title="Our Services" description="From ready-made solutions to fully custom software, we've got you covered" />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {services.map((service, index) => (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="p-6 rounded-xl bg-card border border-border hover:border-primary/50 transition-all group hover:shadow-lg"
-              >
-                <div className="w-12 h-12 rounded-lg bg-blitz-gradient flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <service.icon className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <p className="text-muted-foreground">{service.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Projects */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <SectionHeader badge="Our Work" title="Featured Projects" description="Discover our latest production-ready applications" />
@@ -237,16 +112,41 @@ const Index = () => {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredProjects.map((project, index) => (
-<<<<<<< HEAD
-                <ProjectCard key={project._id} id={project._id} slug={project._id} {...project} index={index} />
-=======
-<<<<<<< HEAD
-                <ProjectCard key={project.id} {...project} index={index} />
-=======
-                <ProjectCard key={project._id} id={project._id} slug={project._id} {...project} index={index} />
->>>>>>> 543604f79ee2629fb590a13389ced1f0a9de7d10
->>>>>>> 241152972fd255a93c347acfcadaaf09fe8cc3bd
+              {featuredProjects.map((project: any, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="border rounded-lg p-6 hover:shadow-lg transition-shadow"
+                >
+                  <div className="aspect-video bg-muted rounded-lg mb-4 overflow-hidden">
+                    <img
+                      src={project.images && project.images.length > 0 ? project.images[0] : 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400'}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
+                  <p className="text-gray-600 mb-4 line-clamp-2">{project.short_description}</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm text-gray-500">{project.category}</span>
+                    <span className="font-bold">{project.is_free ? 'Free' : `$${project.price}`}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {(project.tech_stack || []).slice(0, 3).map((tech: string) => (
+                      <span key={tech} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <Button asChild className="w-full">
+                    <Link to={`/projects/${project.id}`}>
+                      View Details
+                    </Link>
+                  </Button>
+                </motion.div>
               ))}
             </div>
           )}
@@ -262,7 +162,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Team Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <SectionHeader badge="The Team" title="Meet Our Experts" description="Talented developers ready to bring your vision to life" />
@@ -290,20 +189,54 @@ const Index = () => {
           ) : (
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {teamMembers.map((member, index) => (
-                <DeveloperCard 
-                  key={member.id || member.name} 
-                  name={member.name}
-                  title={member.experience || 'Developer'}
-                  avatarUrl={member.avatar}
-                  bio={member.bio}
-                  specializations={member.skills ? member.skills.slice(0, 3) : []}
-                  skills={member.skills || []}
-                  githubUrl={member.github}
-                  linkedinUrl={member.linkedin}
-                  portfolioUrl={member.portfolio}
-                  experienceYears={0} // Database doesn't have this field
-                  index={index} 
-                />
+                <motion.div
+                  key={member.id || member.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="border rounded-lg p-6 hover:shadow-lg transition-all duration-300 bg-card"
+                >
+                  <div className="w-24 h-24 rounded-full overflow-hidden bg-muted mx-auto mb-4">
+                    <img
+                      src={member.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-1">{member.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">{member.experience || 'Developer'}</p>
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">{member.bio}</p>
+                  <div className="flex flex-wrap gap-1 justify-center mb-4">
+                    {(member.skills || []).slice(0, 3).map((skill: string) => (
+                      <span key={skill} className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex justify-center gap-3">
+                    {member.github && (
+                      <a
+                        href={member.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 group"
+                      >
+                        <Github className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
+                      </a>
+                    )}
+                    {member.linkedin && (
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 bg-white hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 group"
+                      >
+                        <Linkedin className="w-5 h-5 text-blue-600 group-hover:text-blue-700" />
+                      </a>
+                    )}
+                  </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -313,39 +246,6 @@ const Index = () => {
               <Link to="/team">View Full Team</Link>
             </Button>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative overflow-hidden rounded-2xl bg-blitz-gradient p-8 md:p-12 text-center"
-          >
-            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-                Ready to Build Something Amazing?
-              </h2>
-              <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-                Let's discuss your project and turn your ideas into reality.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg" variant="secondary" className="text-lg">
-                  <Link to="/contact">
-                    Start Your Project
-                    <Zap className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
-                  <Link to="/how-to-use">Learn How It Works</Link>
-                </Button>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </section>
     </div>
