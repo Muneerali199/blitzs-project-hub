@@ -93,12 +93,16 @@ export const Navbar = () => {
                       <DropdownMenuLabel className="truncate">
                         {user.full_name || user.email}
                       </DropdownMenuLabel>
+                      <div className="px-3 text-xs text-muted-foreground truncate">{user.email}</div>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <Link to="/user-dashboard">Profile</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/settings">Settings</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/settings#avatar">Change Avatar</Link>
                       </DropdownMenuItem>
                       {isAdmin && (
                         <DropdownMenuItem asChild>
@@ -176,11 +180,16 @@ export const Navbar = () => {
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
+                    <div className="px-3 text-xs text-muted-foreground truncate">{user.email}</div>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <Link to="/user-dashboard" onClick={() => setIsOpen(false)}>Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/settings" onClick={() => setIsOpen(false)}>Settings</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings#avatar" onClick={() => setIsOpen(false)}>Change Avatar</Link>
                     </DropdownMenuItem>
                     {isAdmin && (
                       <DropdownMenuItem asChild>
