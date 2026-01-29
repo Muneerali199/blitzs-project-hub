@@ -20,12 +20,12 @@ const UserDashboard = () => {
     const fetchData = async () => {
       try {
         const [ordersRes, requestsRes] = await Promise.all([
-          orderService.getUserOrders(),
-          clientService.getUserClientRequests()
+          orderService.getUserOrders(user.id),
+          clientService.getUserClientRequests(user.id)
         ]);
         
-        if (ordersRes.success) setOrders(ordersRes.data.orders);
-        if (requestsRes.success) setRequests(requestsRes.data.requests);
+        if (ordersRes.success) setOrders(ordersRes.data);
+        if (requestsRes.success) setRequests(requestsRes.data);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
         toast.error('Failed to load dashboard data');

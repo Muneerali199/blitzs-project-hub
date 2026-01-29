@@ -109,6 +109,29 @@ export const clientService = {
     }
   },
 
+  async getUserClientRequests(userId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('client_requests')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching user client requests:', error);
+        return this.getFallbackRequests();
+      }
+
+      return {
+        success: true,
+        data: data || []
+      };
+    } catch (error) {
+      console.error('Error fetching user client requests:', error);
+      return this.getFallbackRequests();
+    }
+  },
+
   async getFallbackRequests() {
     try {
       const requests = JSON.parse(localStorage.getItem('client_requests') || '[]');
