@@ -33,7 +33,6 @@ const App = () => (
     <ThemeProvider>
       <AuthProvider>
         <TooltipProvider>
-          <Particles className="fixed inset-0 z-0 pointer-events-none" />
           <div className="relative z-10">
             <Toaster />
             <Sonner />
@@ -71,6 +70,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </div>
+          <Particles className="fixed inset-0 z-40 pointer-events-none" />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>

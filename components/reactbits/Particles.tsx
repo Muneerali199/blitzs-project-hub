@@ -74,6 +74,30 @@ const Particles = ({ className }) => {
     `;
     document.head.appendChild(style);
 
+    // Debug: log mount and create a visible test particle on localhost only
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[Particles] mounted');
+      if (typeof window !== 'undefined' && window.location.hostname.includes('localhost')) {
+        const test = document.createElement('div');
+        test.className = 'particle test-particle';
+        test.style.width = '26px';
+        test.style.height = '26px';
+        test.style.left = '50%';
+        test.style.top = '50%';
+        test.style.transform = 'translate(-50%, -50%)';
+        test.style.backgroundColor = '#38bdf8';
+        test.style.opacity = '0.98';
+        test.style.boxShadow = '0 0 24px #38bdf8, 0 0 48px #60a5fa';
+        test.style.animationDuration = '8s';
+        test.style.zIndex = '1000';
+        container.appendChild(test);
+        particles.push(test);
+      }
+    } catch (e) {
+      // ignore
+    }
+
     return () => {
       particles.forEach(particle => {
         if (container.contains(particle)) {
