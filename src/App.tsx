@@ -34,9 +34,10 @@ const App = () => (
       <AuthProvider>
         <TooltipProvider>
           <Particles className="fixed inset-0 z-0 pointer-events-none" />
-          <Toaster />
-          <Sonner />
-          <Routes>
+          <div className="relative z-10">
+            <Toaster />
+            <Sonner />
+            <Routes>
             <Route element={<MainLayout />}>
               <Route path="/" element={<Index />} />
               <Route path="/team" element={<Team />} />
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </div>
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
