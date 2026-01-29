@@ -33,7 +33,7 @@ const App = () => (
     <ThemeProvider>
       <AuthProvider>
         <TooltipProvider>
-          <Particles className="fixed inset-0 -z-10" particleBaseSize={200} particleCount={50} />
+          <Particles className="fixed inset-0 z-0 pointer-events-none" />
           <Toaster />
           <Sonner />
           <Routes>

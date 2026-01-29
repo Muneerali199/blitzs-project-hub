@@ -29,34 +29,47 @@ const Particles = ({ className }) => {
       particles.push(particle);
     }
 
-    // Add CSS animation
+    // Add CSS animation + glow
     const style = document.createElement('style');
     style.textContent = `
       .particle {
         position: absolute;
-        width: 4px;
-        height: 4px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
         pointer-events: none;
         animation: float linear infinite;
-        opacity: 0.7;
+        opacity: 0.9;
+        will-change: transform, opacity;
+        box-shadow: 0 0 8px currentColor, 0 0 18px currentColor;
+        mix-blend-mode: screen;
       }
 
       @keyframes float {
         0% {
-          transform: translateY(0px) rotate(0deg);
+          transform: translateY(0px) translateX(0px) rotate(0deg);
           opacity: 0;
         }
         10% {
-          opacity: 0.7;
+          opacity: 0.9;
         }
-        90% {
-          opacity: 0.7;
+        50% {
+          transform: translateY(-50vh) translateX(4vw) rotate(180deg);
         }
         100% {
-          transform: translateY(-100vh) rotate(360deg);
+          transform: translateY(-110vh) translateX(-4vw) rotate(360deg);
           opacity: 0;
         }
+      }
+
+      /* Ensure the container covers the viewport when fixed classes aren't applied */
+      .particles-viewport {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 0;
       }
     `;
     document.head.appendChild(style);
@@ -73,7 +86,7 @@ const Particles = ({ className }) => {
     };
   }, []);
 
-  return <div ref={containerRef} className={className} />;
+  return <div ref={containerRef} className={`${className || ''} particles-viewport`} />;
 };
 
 export default Particles;
