@@ -159,25 +159,38 @@ export const Navbar = () => {
             ))}
             {user ? (
               <div className="pt-4 space-y-2 border-t">
-                <Link
-                  to="/user-dashboard"
-                  onClick={() => setIsOpen(false)}
-                  className="block px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground"
-                >
-                  Profile
-                </Link>
-                {isAdmin && (
-                  <Link
-                    to="/admin-dashboard"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground"
-                  >
-                    Admin Dashboard
-                  </Link>
-                )}
-                <Button variant="ghost" className="w-full" onClick={() => { setIsOpen(false); signOut(); }}>
-                  Sign Out
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.full_name || user.email} className="h-8 w-8 rounded-full object-cover" />
+                      ) : (
+                        <div className="h-8 w-8 rounded-full bg-muted-foreground text-background flex items-center justify-center text-sm font-medium">
+                          {user.full_name ? user.full_name.split(" ").map((n) => n[0]).slice(0, 2).join("") : user.email?.split("@")[0].slice(0, 2).toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <div className="text-sm font-medium truncate">{user.full_name || user.email?.split("@")[0]}</div>
+                        <div className="text-xs text-muted-foreground truncate">View profile and settings</div>
+                      </div>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <Link to="/user-dashboard" onClick={() => setIsOpen(false)}>Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" onClick={() => setIsOpen(false)}>Settings</Link>
+                    </DropdownMenuItem>
+                    {isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin-dashboard" onClick={() => setIsOpen(false)}>Admin Dashboard</Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onSelect={() => { setIsOpen(false); signOut(); }}>Sign Out</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : (
               <div className="pt-4 space-y-2 border-t">
